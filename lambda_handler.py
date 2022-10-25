@@ -7,6 +7,8 @@ dynamodb = boto3.resource('dynamodb', region_name='eu-west-2')
 table = dynamodb.Table('made_up_users')
 
 def lambda_handler(event, context):
+    print(event)
+    print(context)
     data = json.loads(event['body'])
     
     try:
@@ -18,10 +20,14 @@ def lambda_handler(event, context):
                 'password': data['password']
             }
         )
+        return {
+            'statusCode': 200,
+            'body': json.dumps("Successfully added a user")
+        }
+
     except Exception as e:
         print (e)
-    
-    return {
-        'statusCode': 200,
-        'body': json.dumps('Hello from Lambda!')
-    }
+        return {
+            'statusCode': 500,
+            'body': json.dumps("error when adding a user")
+        }
